@@ -1,95 +1,91 @@
-﻿(string Name, string Login, int LoginLeght, bool HavePet, int Age, string [] FavColor) User;
-
-bool Check = false;
-
-for (int k = 0; k < 3; k++)
-{
-    while (Check == false)
+﻿
+    static (string name, string lastname, int age, string[] petname, string[] favcolor) NewUser()
     {
+        (string name, string lastname, int age, string[] petname, string[] favcolor) User;
+
+
         Console.WriteLine("Введите ваше имя: ");
-        User.Name = Console.ReadLine();
+        User.name = StringCheck(Console.ReadLine());
 
-        if (String.IsNullOrEmpty(User.Name) == true)
-        {
-            Console.WriteLine("Некорректный ввод!");
-        }
-        else
-        {
-            Console.WriteLine("Здравствуйте, {0}!", User.Name);
-            Check = true;
-        }
+        Console.WriteLine("Введите вашу фамилию: ");
+        User.lastname = StringCheck(Console.ReadLine());
 
-    }
-
-    Check = false;
-    while (Check == false)
-    {
-        Console.WriteLine("Введите ваше логин: ");
-        User.Login = Console.ReadLine();
-
-        if (String.IsNullOrEmpty(User.Login) == true)
-        {
-            Console.WriteLine("Некорректный ввод!");
-        }
-        else
-        {
-            User.LoginLeght = User.Login.Length;
-            Console.WriteLine("Длина логина: {0}", User.LoginLeght);
-            Check = true;
-        }
-
-    }
-
-
-    Check = false;
-    while (Check == false)
-    {
-        Console.WriteLine("У вас есть животное (д/н)?: ");
-        if (Console.ReadLine() == "д")
-        {
-            User.HavePet = true;
-            Check = true;
-        }
-        else if (Console.ReadLine() == "н")
-        {
-            User.HavePet = false;
-            Check = true;
-        }
-        else { Console.WriteLine("Некорректный ввод!"); }
-
-    }
-    Check = false;
-    while (Check == false)
-    {
         Console.WriteLine("Введите ваш возраст: ");
-        Check = int.TryParse(Console.ReadLine(), out User.Age);
-        if (Check == false)
+        User.age = NumCheck(Console.ReadLine());
+
+        Console.WriteLine("У вас есть животное (Да/Нет)?: ");// Любое значение кроме "Да" будет засчитано как нет.
+        if (Console.ReadLine() == "Да")
         {
-            Console.WriteLine("Некорректный ввод!");
+            Console.WriteLine("Введите колличество животных: ");
+            int num = NumCheck(Console.ReadLine());
+            User.petname = Array(num);
         }
         else
         {
-            break;
+            User.petname = new string[] { "Нет животных" };
         }
-    }
-    User.FavColor = new string[3];
-    for (int i = 0; i < User.FavColor.Length; i++)
-    {
-        Check = false;
-        while (Check == false)
+
+        Console.WriteLine("У вас есть любимый цвет (Да/Нет)?: ");// Любое значение кроме "Да" будет засчитано как нет.
+        if (Console.ReadLine() == "Да")
         {
-            Console.WriteLine("Введите ваш любимый цвет №{0}: ", i);
-            User.FavColor[i] = Console.ReadLine();
+            Console.WriteLine("Введите колличество цветов: ");
+            int num = NumCheck(Console.ReadLine());
+            User.favcolor = Array(num);
+        }
+        else
+        {
+            User.favcolor = new string[] { "Нет любимых цветов" };
+        }
+        return User;
+    }
 
-            if (String.IsNullOrEmpty(User.FavColor[i]) == true)
-            {
-                Console.WriteLine("Некорректный ввод!");
-            }
-            else
-            {
-                Check = true;
-            }
+    static int NumCheck(string forcheck)
+    {
+        bool check = false;
+        int num = -1;
 
+        while (check == false || num <= 0)
+        {
+            check = int.TryParse(forcheck, out num); ;
+        }
+        return num;
+
+    }
+
+    static string StringCheck(string forcheck)
+    {
+        while (String.IsNullOrEmpty(forcheck) == true)
+        {
+            Console.WriteLine("Некорректный ввод!");
+            forcheck = Console.ReadLine();
+        }
+        return forcheck;
+    }
+
+    static string[] Array(int num)
+    {
+        string[] array = new string[num];
+        for (int i = 0; i < array.Length; i++)
+        {
+            Console.WriteLine("Введите название №{0}: ", i);
+            array[i] = StringCheck(Console.ReadLine());
+        }
+        return array;
+    }
+
+    static void ShowUser((string name, string lastname, int age, string[] petname, string[] favcolor) User)
+    {
+        Console.WriteLine("\n{0}\n{1}\n{2}", User.name, User.lastname, User.age);
+        for (int i = 0; i < User.petname.Length; i++)
+        {
+            Console.Write(User.petname[i], ", ");
+        }
+        for (int i = 0; i < User.favcolor.Length; i++)
+        {
+            Console.Write(User.favcolor[i], ", ");
         }
     }
-}
+
+    var FirstUser = NewUser();
+
+    ShowUser(FirstUser);
